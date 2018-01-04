@@ -1,0 +1,8 @@
+__percona_mysql_pkgs:
+  - "percona-server-server-{{ percona_mysql_version }}"
+  - "percona-toolkit"
+  - "python-mysqldb"
+
+__percona_mysql_service: "mysql"
+
+__percona_mysql_conf_dir: "/etc/mysql"

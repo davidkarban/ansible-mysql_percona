@@ -1,0 +1,22 @@
+- name: Create database for user
+  mysql_db:
+    login_host: "{{ item.login_host|default('localhost') }}"
+    login_password: "{{ item.login_password|default(omit) }}"
+    login_user: "{{ item.login_user|default(omit) }}"
+    db: "{{ item.name }}"
+    collation: "utf8_unicode_ci"
+    encoding: "utf8"
+    state: "present"
+  with_items: '{{ outer_item.mysql_user_db|default([]) }}'
+
+- name: Create user
+  mysql_user:
+    login_host: "{{ item.login_host|default('localhost') }}"
+    login_password: "{{ item.login_password|default(omit) }}"
+    login_user: "{{ item.login_user|default(omit) }}"
+    name: '{{ item.name|truncate(16, True, "") }}'
+    host: '{{ item.host|default("localhost") }}'
+    password: '{{ lookup("password", inventory_dir + "/credentials/" + ansible_fqdn + "/" + item.name + "_mysql_password length=64") }}'
+    priv: '{{ item.name|truncate(16, True, "") }}.*:ALL'
+    state: 'present'
+  with_items: '{{ outer_item.mysql_user_db|default([]) }}'

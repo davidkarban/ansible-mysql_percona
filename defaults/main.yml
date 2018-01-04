@@ -1,2 +1,6 @@
 ---
-# defaults file for ansible-percona-mysql
+# defaults file for ansible-mysql_percona
+
+percona_mysql_version: "5.7"
+
+percona_mysql_bind_address: "127.0.0.1"

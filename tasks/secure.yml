@@ -1,0 +1,29 @@
+- name: Ensure root account has password
+  mysql_user:
+    name: "root"
+    host: "localhost"
+    password: "{{ lookup('password', inventory_dir + '/credentials/' + ansible_fqdn + '/mysql_root_password length=64') }}"
+
+- name: Ensure root can login without password
+  template:
+    src: ".my.cnf.j2"
+    dest: "/root/.my.cnf"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+  with_password:
+    - "{{ inventory_dir + '/credentials/' + ansible_fqdn + '/mysql_root_password' }}"
+
+- name: Ensure anonymous users are not in the database
+  mysql_user:
+    name: ''
+    host: "{{ item }}"
+    state: absent
+  with_items:
+   - localhost
+   - "{{ ansible_hostname }}"
+
+- name: Ensure test database is removed
+  mysql_db:
+    name: "test"
+    state: absent

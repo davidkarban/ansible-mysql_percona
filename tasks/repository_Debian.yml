@@ -1,0 +1,11 @@
+- name: Ensure repository gpg key is imported
+  apt_key:
+    keyserver: "keys.gnupg.net"
+    id: "9334A25F8507EFA5"
+    state: present
+
+- name: Ensure repository is available
+  apt_repository:
+    repo: "deb http://repo.percona.com/apt {{ ansible_lsb.codename }} main"
+    update_cache: yes
+    state: present

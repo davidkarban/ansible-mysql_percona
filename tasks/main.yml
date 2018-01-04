@@ -1,2 +1,29 @@
 ---
-# tasks file for ansible-percona-mysql
+# tasks file for ansible-percona_mysql
+
+- name: Load the OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- include: repository_{{ ansible_os_family }}.yml
+
+- name: Ensure percona mysql is installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ __percona_mysql_pkgs }}"
+
+- name: Setup mysqld configuration
+  template:
+    src: "mysqld.cnf.j2"
+    dest: "{{ __percona_mysql_conf_dir }}/percona-server.conf.d/mysqld.cnf"
+  notify: restart mysql
+
+- name: Ensure installation is secured
+  include: secure.yml
+
+- name: If there are vhosts variable available setup mysql users and db
+  include: users_db.yml
+  with_items: "{{ vhosts }}"
+  loop_control:
+    loop_var: outer_item
+  when: vhosts is defined
