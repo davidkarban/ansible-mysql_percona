@@ -4,3 +4,9 @@
 percona_mysql_version: "5.7"
 
 percona_mysql_bind_address: "127.0.0.1"
+
+# set to true in host_vars/group_vars if you are using zfs and you have prepared optimizations for it
+# https://www.percona.com/blog/2017/12/07/hands-look-zfs-with-mysql/
+# http://open-zfs.org/wiki/Performance_tuning#MySQL
+# logs are kgoing to /var/lib/mysql-log
+percona_mysql_zfs: false

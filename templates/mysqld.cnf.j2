@@ -36,3 +36,10 @@ query_cache_type    = 0
 
 # Disable reverse DNS name resolving
 skip-name-resolve   = 1
+
+{% if percona_mysql_zfs %}
+# zfs tuning
+innodb_log_group_home_dir = /var/lib/mysql-log
+innodb_doublewrite = 0
+innodb_checksum_algorithm = none
+{% endif %}

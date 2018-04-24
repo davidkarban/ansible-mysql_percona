@@ -12,11 +12,25 @@
     state: present
   with_items: "{{ __percona_mysql_pkgs }}"
 
+- name: Ensure log directory is separate from datafiles (for zfs integration)
+  file:
+    path: "/var/lib/mysql-log"
+    owner: "mysql"
+    group: "mysql"
+    mode: "0750"
+    state: "directory"
+  when: percona_mysql_zfs
+
 - name: Setup mysqld configuration
   template:
     src: "mysqld.cnf.j2"
     dest: "{{ __percona_mysql_conf_dir }}/percona-server.conf.d/mysqld.cnf"
   notify: restart mysql
+
+- name: Ensure mysql is running so I can secure it
+  service:
+    name: "{{ __percona_mysql_service }}"
+    state: started
 
 - name: Ensure installation is secured
   include: secure.yml
