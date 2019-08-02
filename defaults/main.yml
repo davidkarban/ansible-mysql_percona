@@ -1,9 +1,12 @@
 ---
 # defaults file for ansible-mysql_percona
 
-percona_mysql_version: "5.7"
+percona_mysql_version: "{% if ansible_os_family == 'Debian' %}5.7{% else %}57{% endif %}"
 
 percona_mysql_bind_address: "127.0.0.1"
+percona_mysql_socket: "/var/run/mysqld/mysqld.sock"
+
+percona_mysql_sql_mode: "NO_ENGINE_SUBSTITUTION,STRICT_ALL_TABLES"
 
 # set to true in host_vars/group_vars if you are using zfs and you have prepared optimizations for it
 # https://www.percona.com/blog/2017/12/07/hands-look-zfs-with-mysql/
@@ -16,3 +19,4 @@ percona_mysql_binlog: true
 
 # size in GB
 percona_mysql_buffer_pool_size: 1
+

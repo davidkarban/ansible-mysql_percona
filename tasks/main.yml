@@ -8,11 +8,10 @@
 
 - name: Ensure percona mysql is installed
   package:
-    name: "{{ item }}"
+    name: "{{ __percona_mysql_pkgs }}"
     state: present
-  with_items: "{{ __percona_mysql_pkgs }}"
 
-- name: Ensure log directory is separate from datafiles (for zfs integration)
+- name: Ensure wal log directory is separate from datafiles (for zfs integration)
   file:
     path: "/var/lib/mysql-log"
     owner: "mysql"
@@ -21,16 +20,29 @@
     state: "directory"
   when: percona_mysql_zfs
 
+- name: Ensure log directory is available
+  file:
+    path: "/var/log/mysql"
+    owner: "mysql"
+    group: "mysql"
+    mode: "0750"
+    state: "directory"
+
 - name: Setup mysqld configuration
   template:
-    src: "mysqld.cnf.j2"
-    dest: "{{ __percona_mysql_conf_dir }}/percona-server.conf.d/mysqld.cnf"
+    src: "{{ item }}.j2"
+    dest: "{{ __percona_mysql_conf_dir }}/percona-server.conf.d/{{ item }}"
+  loop: 
+    - mysqld.cnf
   notify: restart mysql
 
 - name: Ensure mysql is running so I can secure it
   service:
     name: "{{ __percona_mysql_service }}"
     state: started
+
+# because we need to load new config before ansible modules try to secure database
+- meta: flush_handlers
 
 - name: Ensure installation is secured
   include: secure.yml

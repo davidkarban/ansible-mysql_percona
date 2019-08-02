@@ -1,0 +1,10 @@
+- name: Upload rpm with percona repository, if needed.
+  copy: 
+    src: "percona-release-0.1-6.noarch.rpm"
+    dest: "/root/percona-release-0.1-6.noarch.rpm"
+
+- name: Ensure repository is available
+  yum: 
+    name: "/root/percona-release-0.1-6.noarch.rpm"
+    state: present
+
