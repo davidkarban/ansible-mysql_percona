@@ -36,6 +36,23 @@ query_cache_type    = 0
 
 # Disable reverse DNS name resolving
 skip-name-resolve   = 1
+{% if percona_mysql_binlog %}
+# binary logs
+server-id = {{ percona_mysql_server_id|default(1) }}
+log-bin = /var/lib/mysql-logs/mysql-bin.log
+log_bin_trust_function_creators = 1
+max_binlog_size = 10M
+expire_logs_days = 3
+binlog_format = ROW
+
+{% endif %}
+# InnoDB
+innodb_file_per_table = 1
+
+innodb_buffer_pool_size = {{ percona_mysql_buffer_pool_size }}G
+innodb_buffer_pool_instances = {{ percona_mysql_buffer_pool_size }}
+innodb_flush_log_at_trx_commit = 2
+innodb_log_file_size = 512M
 
 {% if percona_mysql_zfs %}
 # zfs tuning

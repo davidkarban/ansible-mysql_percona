@@ -10,3 +10,9 @@ percona_mysql_bind_address: "127.0.0.1"
 # http://open-zfs.org/wiki/Performance_tuning#MySQL
 # logs are kgoing to /var/lib/mysql-log
 percona_mysql_zfs: false
+
+# default binlog
+percona_mysql_binlog: true
+
+# size in GB
+percona_mysql_buffer_pool_size: 1
