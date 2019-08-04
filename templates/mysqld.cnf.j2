@@ -39,7 +39,7 @@ skip-name-resolve   = 1
 {% if percona_mysql_binlog %}
 # binary logs
 server-id = {{ percona_mysql_server_id|default(1) }}
-log-bin = /var/lib/mysql-logs/mysql-bin.log
+log-bin = {{ percona_mysql_log_bin|default("/var/lib/mysql/mysql-bin.log" }}
 log_bin_trust_function_creators = 1
 max_binlog_size = 10M
 expire_logs_days = 3
