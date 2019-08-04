@@ -36,10 +36,11 @@
     - mysqld.cnf
   notify: restart mysql
 
-- name: Ensure mysql is running so I can secure it
+- name: Ensure mysql is running so I can secure it (and esnsure it runs after boot)
   service:
     name: "{{ __percona_mysql_service }}"
     state: started
+    enabled: true
 
 # because we need to load new config before ansible modules try to secure database
 - meta: flush_handlers
